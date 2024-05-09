@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_for_taksh/pages/splash_screen.dart';
 import 'pages/task_list.dart';
 
 void main() {
@@ -10,12 +11,15 @@ class TaskListApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Taksh Task List',
+      title: 'Taksh Project',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: TaskListScreen(),
+      routes: {
+        '/task_list': (context) => TaskListScreen(),
+      },
+      home: SplashScreen(),
     );
   }
 }
