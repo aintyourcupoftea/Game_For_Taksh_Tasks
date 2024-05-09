@@ -1,9 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:game_for_taksh/main.dart';
-import 'package:game_for_taksh/pages/task_list.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:soundpool/soundpool.dart';
 
 class SplashScreen extends StatelessWidget {
   SplashScreen({super.key});
@@ -11,6 +10,23 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Uri url = Uri.parse('https://www.khojcommunity.com/about-1');
+
+    Future<void> _playSound() async {
+      final ByteData soundDataBytes =
+          await rootBundle.load('lib/assets/sfx/click.wav');
+      final Soundpool pool =
+          Soundpool.fromOptions(); // Create Soundpool instance
+      final int soundId = await pool.load(soundDataBytes); // Load the sound
+
+      // Play the sound and get the streamId
+      final int streamId =
+          await pool.play(soundId); // Play the sound and get the streamId
+
+      // Adjust the volume of the sound using the streamId
+      pool.setVolume(
+          streamId: streamId,
+          volume: 0.5); // Adjust the volume here (value between 0.0 and 1.0)
+    }
 
     Future<void> onLaunchUrl() async {
       if (!await launchUrl(url)) {
@@ -33,7 +49,7 @@ class SplashScreen extends StatelessWidget {
             SizedBox(height: 20),
             MaterialButton(
               onPressed: () {
-                SystemSound.play(SystemSoundType.alert);
+                _playSound();
                 Navigator.pushNamed(context, "/task_list");
               },
               child: Text('Get Started'),
