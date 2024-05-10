@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:soundpool/soundpool.dart';
+import '/util/playclick.dart';
 
 class SplashScreen extends StatelessWidget {
   SplashScreen({super.key});
@@ -10,23 +10,6 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Uri url = Uri.parse('https://www.khojcommunity.com/about-1');
-
-    Future<void> _playSound() async {
-      final ByteData soundDataBytes =
-          await rootBundle.load('lib/assets/sfx/click.wav');
-      final Soundpool pool =
-          Soundpool.fromOptions(); // Create Soundpool instance
-      final int soundId = await pool.load(soundDataBytes); // Load the sound
-
-      // Play the sound and get the streamId
-      final int streamId =
-          await pool.play(soundId); // Play the sound and get the streamId
-
-      // Adjust the volume of the sound using the streamId
-      pool.setVolume(
-          streamId: streamId,
-          volume: 0.5); // Adjust the volume here (value between 0.0 and 1.0)
-    }
 
     Future<void> onLaunchUrl() async {
       if (!await launchUrl(url)) {
@@ -44,15 +27,29 @@ class SplashScreen extends StatelessWidget {
               "Project: Exploring LocalSend",
               style: TextStyle(
                 fontSize: 24,
+                fontFamily: "Merriweather",
               ),
             ),
             SizedBox(height: 20),
             MaterialButton(
               onPressed: () {
-                _playSound();
-                Navigator.pushNamed(context, "/task_list");
+                SoundUtil.playSound();
+                Navigator.pushNamed(context, "/start");
               },
-              child: Text('Get Started'),
+              child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Begin',
+                        style: TextStyle(fontFamily: "FMBolyarPro"),
+                      ),
+                      Icon(Icons.play_arrow_rounded),
+                    ],
+                  )),
               color: Colors.black,
               textColor: Colors.white,
               hoverElevation: 12,
@@ -72,7 +69,10 @@ class SplashScreen extends StatelessWidget {
             textAlign: TextAlign.center,
             text: TextSpan(
               text: 'Made with ❤️ by ',
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: "Merriweather",
+                  fontWeight: FontWeight.w400),
               children: [
                 TextSpan(
                   recognizer: TapGestureRecognizer()
